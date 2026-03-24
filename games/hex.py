@@ -13,6 +13,7 @@ class HexGame(Game):
         self.last_move = None
         self.game_type = "Hex"
         self.add_reactions = False
+        self.swap_enabled = True
         self.gameboard = [[self.empty_piece for w in range(self.settings["width"])] for h in range(self.settings["height"])]
 
     def parse_move_string(self, move):
@@ -27,9 +28,13 @@ class HexGame(Game):
         return "Enter a coordinate (e.g., 'a1')."
 
     def is_formatted_move(self, move):
+        if self.can_swap() and move.strip().lower() == "swap":
+            return True
         return self.parse_move_string(move) is not None
 
     def is_legal_move(self, move):
+        if self.can_swap() and move.strip().lower() == "swap":
+            return True
         coord = self.parse_move_string(move)
         if coord is None:
             return False
@@ -79,6 +84,10 @@ class HexGame(Game):
         return string_of_grid
 
     def make_move(self, move):
+        if self.can_swap() and move.strip().lower() == "swap":
+            self.do_swap()
+            return
+
         coord = self.parse_move_string(move)
         if coord is None:
             return
@@ -93,6 +102,7 @@ class HexGame(Game):
         piece = self.get_piece_to_move()
         self.gameboard[r][c] = piece
         self.last_move = (r, c)
+        self.move_count += 1
         self.resolve_outcome()
 
     def get_settings_string(self):

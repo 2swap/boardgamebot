@@ -13,6 +13,7 @@ class SnortGame(Game):
         self.last_move = None
         self.game_type = "Snort"
         self.add_reactions = False
+        self.swap_enabled = True
         self.gameboard = [[self.empty_piece for w in range(self.settings["width"])] for h in range(self.settings["height"])]
 
     def parse_move_string(self, move):
@@ -24,9 +25,13 @@ class SnortGame(Game):
         return "Enter a coordinate (e.g., 'a1')."
 
     def is_formatted_move(self, move):
+        if self.can_swap() and move.strip().lower() == "swap":
+            return True
         return self.parse_move_string(move) is not None
 
     def is_legal_move(self, move):
+        if self.can_swap() and move.strip().lower() == "swap":
+            return True
         coord = self.parse_move_string(move)
         if coord is None:
             return False
@@ -76,6 +81,9 @@ class SnortGame(Game):
         return string_of_grid
 
     def make_move(self, move):
+        if self.can_swap() and move.strip().lower() == "swap":
+            self.do_swap()
+            return
         coord = self.parse_move_string(move)
         if coord is None:
             return
@@ -83,6 +91,7 @@ class SnortGame(Game):
         if self.gameboard[row][col] == self.empty_piece:
             self.gameboard[row][col] = self.get_piece_to_move()
             self.last_move = (row, col)
+            self.move_count += 1
 
     def get_settings_string(self):
         return f"Width: {self.settings['width']}, Height: {self.settings['height']}"

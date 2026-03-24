@@ -18,6 +18,14 @@ class Game():
         self.outcome = None
         self.empty_piece = "🟠"
         self.game_type = None
+        self.swap_enabled = False
+        self.move_count = 0
+
+    def can_swap(self):
+        return self.swap_enabled and self.turn == 2 and self.move_count == 1
+
+    def do_swap(self):
+        self.player1_piece, self.player2_piece = self.player2_piece, self.player1_piece
 
     async def send_game_message(self, channel):
         # Only ping user if it's their turn, otherwise display their name without pinging them
