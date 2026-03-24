@@ -68,6 +68,10 @@ class OthelloGame(Game):
                 flips.extend(path)
         return flips
 
+    def get_move_format_instructions(self):
+        max_col = chr(ord('a') + self.settings["width"] - 1)
+        return f"Enter a column letter (a-{max_col}) followed by a row number (1-{self.settings['height']}) (e.g., 'a1')."
+
     def is_formatted_move(self, move):
         return self.parse_move_string(move) is not None
 

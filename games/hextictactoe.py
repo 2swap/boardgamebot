@@ -57,6 +57,10 @@ class HexTicTacToeGame(Game):
             return coords[0]
         return coords
 
+    def get_move_format_instructions(self):
+        max_col = chr(ord('a') + self.settings["width"] - 1)
+        return f"Enter two coordinates separated by a space, each being a column letter (a-{max_col}) followed by a row number (1-{self.settings['height']}) (e.g., 'a1 b2')."
+
     def is_formatted_move(self, move):
         return self.parse_move_string(move) is not None
 

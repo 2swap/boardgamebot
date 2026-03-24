@@ -17,6 +17,9 @@ class Connect4Game(Game):
         self.add_reactions = True
         self.gameboard = [[self.empty_piece for w in range(self.settings["width"])] for h in range(self.settings["height"])]
 
+    def get_move_format_instructions(self):
+        return f"Enter a column number between 1 and {self.settings['width']}."
+
     def is_formatted_move(self, move):
         return move.isdigit() and int(move) >= 1 and int(move) <= self.settings["width"]
     
