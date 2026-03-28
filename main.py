@@ -222,6 +222,8 @@ class Handler:
                 replied_message = await message.channel.fetch_message(game_id)
                 await game.send_gameend_message(message.channel)
                 await replied_message.delete()
+                for task in timeout_tasks:
+                    task.cancel()
                 return
 
         # Find a game for which it's the author's turn.
