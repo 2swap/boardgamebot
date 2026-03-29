@@ -111,7 +111,7 @@ class Handler:
         for filename in os.listdir("games"):
             if filename.endswith(".py"):
                 available_games.append(filename[:-3])
-        await channel.send(f"Start a game with \"!gamename\". For example, \"!connect4\" opens an invitation to a Connect 4 game.\nAvailable games: {', '.join(available_games)}")
+        await channel.send(f"Start a game with \"!gamename\". For example, \"!connect4\" opens an invitation to a Connect 4 game.\nAvailable games: {', '.join(available_games)}\nUse \"!help gamename\" for the rules of the game.")
 
     async def send_game_rules(self, channel, game_name):
         game_classes = {
@@ -222,6 +222,7 @@ class Handler:
                 replied_message = await message.channel.fetch_message(game_id)
                 await game.send_gameend_message(message.channel)
                 await replied_message.delete()
+                
                 return
 
         # Find a game for which it's the author's turn.
@@ -250,13 +251,20 @@ class Handler:
         try:
             await asyncio.sleep(90)
             player_turn = game.get_player_to_move()
+            # if the timeout task hasn't been cancelled by a move being made, then warn the player
+            if not (message_id in self.id_game_dict):
+                return
+            
             await channel.send(f"{player_turn.mention}, you have 20 seconds to make a move before you forfeit the game!")
             await asyncio.sleep(20)
-            # if the timeout task hasn't been cancelled by a move being made, then the player whose turn it is loses and the game ends
-            if message_id in self.id_game_dict:
-                del self.id_game_dict[message_id]
-                game.forfeit(player_turn)
-                await game.send_gameend_message(channel)
+            
+            if not (message_id in self.id_game_dict):
+                return
+
+            # Forfeit the game.
+            del self.id_game_dict[message_id]
+            game.forfeit(player_turn)
+            await game.send_gameend_message(channel)
         except Exception:
             pass
 
