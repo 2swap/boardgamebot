@@ -111,7 +111,7 @@ class Handler:
         for filename in os.listdir("games"):
             if filename.endswith(".py"):
                 available_games.append(filename[:-3])
-        await channel.send(f"Start a game with \"!gamename\". For example, \"!connect4\" opens an invitation to a Connect 4 game.\nAvailable games: {', '.join(available_games)}")
+        await channel.send(f"Start a game with \"!gamename\". For example, \"!connect4\" opens an invitation to a Connect 4 game.\nAvailable games: {', '.join(available_games)}\nUse \"!help gamename\" for the rules of the game.")
 
     async def send_game_rules(self, channel, game_name):
         game_classes = {
