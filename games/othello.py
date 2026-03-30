@@ -13,7 +13,8 @@ class OthelloGame(Game):
         "A move is legal only if it flanks one or more of the opponent's pieces in a straight "
         "line (horizontal, vertical, or diagonal), converting those pieces to the current "
         "player's color. The player with the most pieces when neither player can move wins. "
-        "Move format: enter a coordinate such as 'a1'."
+        "Passing is posssible only if you have no legal moves."
+        "Move format: enter a coordinate such as 'a1', or pass with 'pass'."
     )
 
     def __init__(self, player1, player2, settings):
@@ -64,17 +65,21 @@ class OthelloGame(Game):
         return flips
 
     def get_move_format_instructions(self):
-        return "Enter a coordinate (e.g., 'a1')."
+        return "Enter a coordinate (e.g., 'a1'), or pass with 'pass'."
 
     def is_formatted_move(self, move):
         return self.parse_move_string(move) is not None
 
     def is_legal_move(self, move):
+        
+        piece_to_place = self.get_piece_to_move()
+        if move == 'pass':
+            return not _has_any_legal_moves_for_piece(piece_to_place)
         coord = self.parse_move_string(move)
+        
         if coord is None:
             return False
         row, col = coord
-        piece_to_place = self.get_piece_to_move()
         flips = self._flips_for_move(row, col, piece_to_place)
         return len(flips) > 0
 
@@ -111,6 +116,8 @@ class OthelloGame(Game):
         return string_of_grid
 
     def make_move(self, move):
+        if move == 'pass':
+            return
         coord = self.parse_move_string(move)
         if coord is None:
             return
