@@ -236,11 +236,13 @@ class Handler:
                 continue
             if entry.is_formatted_move(message_content):
                 if entry.is_legal_move(message_content):
+                    print(f"Legal move {message_content}")
                     game = entry
                     replied_message_id = game_id
                     break
                 else:
-                    await message.channel.send(f"{message.author.mention}, that is not a legal move. {game.get_move_format_instructions()}")
+                    print(f"Illegal move {message_content}")
+                    await message.channel.send(f"{message.author.mention}, that is not a legal move. {entry.get_move_format_instructions()}")
                     return
         if not game: # no game found
             return

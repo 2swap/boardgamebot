@@ -167,7 +167,7 @@ def parse_settings(args):
     parsed_settings["height"] = mnk[1]
     parsed_settings["connection_k"] = mnk[2]
 
-    if parsed_settings["connection_k"] < parsed_settings["width"] and parsed_settings["connection_k"] < parsed_settings["height"]
+    if parsed_settings["connection_k"] < parsed_settings["width"] and parsed_settings["connection_k"] < parsed_settings["height"]:
         return (False, {}, "Error: Connection length exceeds board size!")
 
     return (True, parsed_settings, "")

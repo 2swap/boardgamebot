@@ -68,7 +68,7 @@ class OthelloGame(Game):
         return "Enter a coordinate (e.g., 'a1'), or pass with 'pass'."
 
     def is_formatted_move(self, move):
-        return self.parse_move_string(move) is not None
+        return self.parse_move_string(move) or (move == "pass")
 
     def is_legal_move(self, move):
         piece_to_place = self.get_piece_to_move()
