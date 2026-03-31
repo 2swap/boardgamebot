@@ -135,10 +135,10 @@ class GomokuGame(Game):
 
         self.outcome = Outcome.Tie
 
-correction_message = "Invalid command format. Please optionally add -w [width], and -h [height]."
+correction_message = "Invalid command format. Please optionally add -w [width], -h [height], and -k [connectivity]."
 
 def parse_settings(args):
-    mnk = [10, 10, 5]
+    mnk = [15, 15, 5]
 
     parsed_settings = {}
 
@@ -159,15 +159,18 @@ def parse_settings(args):
         return (False, {}, correction_message + " Unrecognized extra arguments: " + " ".join(args))
 
     for param in mnk:
-        if param <= 0 or param > 10:
-            return (False, {}, "Width and height must be between 1 and 10.")
+        if param <= 0 or param > 15:
+            return (False, {}, "Width, height, and connectivity must be between 1 and 15.")
             break
 
     parsed_settings["width"] = mnk[0]
     parsed_settings["height"] = mnk[1]
     parsed_settings["connection_k"] = mnk[2]
 
+    if parsed_settings["connection_k"] < parsed_settings["width"] and parsed_settings["connection_k"] < parsed_settings["height"]
+        return (False, {}, "Error: Connection length exceeds board size!")
+
     return (True, parsed_settings, "")
 
 def get_settings_string(settings):
-    return f"Width: {settings['width']}, Height: {settings['height']}"
+    return f"Width: {settings['width']}, Height: {settings['height']}, Connectivity: {settings['connection_k']}"

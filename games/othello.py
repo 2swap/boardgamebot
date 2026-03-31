@@ -71,10 +71,9 @@ class OthelloGame(Game):
         return self.parse_move_string(move) is not None
 
     def is_legal_move(self, move):
-        
         piece_to_place = self.get_piece_to_move()
         if move == 'pass':
-            return not _has_any_legal_moves_for_piece(piece_to_place)
+            return not self._has_any_legal_moves_for_piece(piece_to_place)
         coord = self.parse_move_string(move)
         
         if coord is None:
@@ -190,8 +189,8 @@ def parse_settings(args):
         return (False, {}, correction_message + " Unrecognized extra arguments: " + " ".join(args))
 
     for param in mnk:
-        if param <= 0 or param > 9:
-            return (False, {}, "Width and height must be between 1 and 9.")
+        if param <= 0 or param > 16:
+            return (False, {}, "Width and height must be between 1 and 16.")
             break
 
     parsed_settings["width"] = mnk[0]
