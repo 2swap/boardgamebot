@@ -4,7 +4,7 @@ import asyncio
 import json
 import os
 from game import Game, Outcome
-from emojis import emojis
+from emojis import emoji_numbers
 
 class Connect4Game(Game):
     rules = (
@@ -50,7 +50,7 @@ class Connect4Game(Game):
     def to_grid(self):
         string_of_grid = "\n";
         for num in range(1, self.settings["width"] + 1):
-            string_of_grid += emojis[num - 1] + "\u200B"
+            string_of_grid += emoji_numbers[num - 1] + "\u200B"
         string_of_grid += "\n"
         for h in range(self.settings["height"]):
             for w in range(self.settings["width"]):

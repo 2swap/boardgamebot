@@ -4,7 +4,7 @@ import asyncio
 import json
 import os
 from game import Game, Outcome
-from emojis import emojis, emoji_numbers, emoji_letters
+from emojis import emoji_numbers, emoji_letters
 from coordinate_parser import parse_single_coordinate
 
 class HexGame(Game):
@@ -57,22 +57,6 @@ class HexGame(Game):
             return False
         return True
     
-    def who_gains_elo(self):
-        if self.outcome == Outcome.Player1Win:
-            return self.player1
-        elif self.outcome == Outcome.Player2Win:
-            return self.player2
-        else:
-            return None
-
-    def who_loses_elo(self):
-        if self.outcome == Outcome.Player1Win:
-            return self.player2
-        elif self.outcome == Outcome.Player2Win:
-            return self.player1
-        else:
-            return None
-
     def to_grid(self):
         string_of_grid = "\n"
         # header: blank corner then column letter emojis

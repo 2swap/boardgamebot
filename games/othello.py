@@ -4,7 +4,7 @@ import asyncio
 import json
 import os
 from game import Game, Outcome
-from emojis import emojis, emoji_numbers, emoji_letters
+from emojis import emoji_numbers, emoji_letters
 from coordinate_parser import parse_single_coordinate
 
 class OthelloGame(Game):
@@ -13,8 +13,8 @@ class OthelloGame(Game):
         "A move is legal only if it flanks one or more of the opponent's pieces in a straight "
         "line (horizontal, vertical, or diagonal), converting those pieces to the current "
         "player's color. The player with the most pieces when neither player can move wins. "
-        "Passing is posssible only if you have no legal moves."
-        "Move format: enter a coordinate such as 'a1', or pass with 'pass'."
+        "Passing is posssible only if you have no legal moves. "
+        "Move format: enter a coordinate such as 'a1'."
     )
 
     def __init__(self, player1, player2, settings):
@@ -65,15 +65,13 @@ class OthelloGame(Game):
         return flips
 
     def get_move_format_instructions(self):
-        return "Enter a coordinate (e.g., 'a1'), or pass with 'pass'."
+        return "Enter a coordinate (e.g., 'a1')."
 
     def is_formatted_move(self, move):
-        return self.parse_move_string(move) or (move == "pass")
+        return self.parse_move_string(move)
 
     def is_legal_move(self, move):
         piece_to_place = self.get_piece_to_move()
-        if move == 'pass':
-            return not self._has_any_legal_moves_for_piece(piece_to_place)
         coord = self.parse_move_string(move)
         
         if coord is None:
@@ -81,22 +79,6 @@ class OthelloGame(Game):
         row, col = coord
         flips = self._flips_for_move(row, col, piece_to_place)
         return len(flips) > 0
-
-    def who_gains_elo(self):
-        if self.outcome == Outcome.Player1Win:
-            return self.player1
-        elif self.outcome == Outcome.Player2Win:
-            return self.player2
-        else:
-            return None
-
-    def who_loses_elo(self):
-        if self.outcome == Outcome.Player1Win:
-            return self.player2
-        elif self.outcome == Outcome.Player2Win:
-            return self.player1
-        else:
-            return None
 
     def to_grid(self):
         string_of_grid = "\n"
@@ -115,8 +97,6 @@ class OthelloGame(Game):
         return string_of_grid
 
     def make_move(self, move):
-        if move == 'pass':
-            return
         coord = self.parse_move_string(move)
         if coord is None:
             return
@@ -129,6 +109,8 @@ class OthelloGame(Game):
         for r, c in flips:
             self.gameboard[r][c] = piece
         self.last_move = (row, col)
+        if not self._has_any_legal_moves_for_piece(self.get_piece_not_to_move()):
+            self.switch_turns()
 
     def get_settings_string(self):
         return f"Width: {self.settings['width']}, Height: {self.settings['height']}"

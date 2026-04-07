@@ -7,11 +7,11 @@ import games.gomoku as gomoku
 import games.hextictactoe as hextictactoe
 import games.hex as hex
 import games.grort as grort
+import games.mancala as mancala
 
 import os
 from elo_manager import elo_manager
 import random
-from emojis import emojis
 import asyncio
 
 # TODO make challenges timeout after a certain amount of time
@@ -26,6 +26,27 @@ intents.members = True
 
 client = discord.Client(intents = intents)
 
+game_classes = {
+    "connect4": connect4.Connect4Game,
+    "snort": snort.SnortGame,
+    "othello": othello.OthelloGame,
+    "gomoku": gomoku.GomokuGame,
+    "hex": hex.HexGame,
+    "hextictactoe": hextictactoe.HexTicTacToeGame,
+    "grort": grort.GrortGame,
+    "mancala": mancala.MancalaGame,
+}
+game_modules = {
+    "connect4": connect4,
+    "snort": snort,
+    "othello": othello,
+    "gomoku": gomoku,
+    "hex": hex,
+    "hextictactoe": hextictactoe,
+    "grort": grort,
+    "mancala": mancala,
+}
+
 class Handler:
     def __init__(self):
         self.id_game_dict = {}
@@ -35,23 +56,7 @@ class Handler:
         owner = reacted_entry.get("owner")
 
         (player1, player2) = (owner, user) if random.random() < 0.5 else (user, owner)
-        class_type = None
-        if reacted_entry["game_type"] == "connect4":
-            class_type = connect4.Connect4Game
-        elif reacted_entry["game_type"] == "snort":
-            class_type = snort.SnortGame
-        elif reacted_entry["game_type"] == "othello":
-            class_type = othello.OthelloGame
-        elif reacted_entry["game_type"] == "go":
-            class_type = go.GoGame
-        elif reacted_entry["game_type"] == "gomoku":
-            class_type = gomoku.GomokuGame
-        elif reacted_entry["game_type"] == "hex":
-            class_type = hex.HexGame
-        elif reacted_entry["game_type"] == "hextictactoe":
-            class_type = hextictactoe.HexTicTacToeGame
-        elif reacted_entry["game_type"] == "grort":
-            class_type = grort.GrortGame
+        class_type = game_classes.get(reacted_entry["game_type"])
         new_game = class_type(player1, player2, reacted_entry["settings"])
 
         print(f"Starting new game between {player1.name} and {player2.name} with settings: {reacted_entry['settings']}")
@@ -114,15 +119,6 @@ class Handler:
         await channel.send(f"Start a game with \"!gamename\". For example, \"!connect4\" opens an invitation to a Connect 4 game.\nAvailable games: {', '.join(available_games)}\nUse \"!help gamename\" for the rules of the game.")
 
     async def send_game_rules(self, channel, game_name):
-        game_classes = {
-            "connect4": connect4.Connect4Game,
-            "snort": snort.SnortGame,
-            "othello": othello.OthelloGame,
-            "gomoku": gomoku.GomokuGame,
-            "hex": hex.HexGame,
-            "hextictactoe": hextictactoe.HexTicTacToeGame,
-            "grort": grort.GrortGame,
-        }
         game_class = game_classes.get(game_name)
         if game_class is None:
             await channel.send(f"Unknown game: \"{game_name}\". Use !help to see available games.")
@@ -158,27 +154,12 @@ class Handler:
             else:
                 await self.send_help_message(message.channel)
         elif command == "leaderboard":
-            await message.channel.send(elo_manager.get_leaderboard())
+            game = arguments[0] if arguments else None
+            await message.channel.send(elo_manager.get_leaderboard(game))
         else:
             # post an open challenge anyone can join by reacting
-            module = None
-            if command == "connect4":
-                module = connect4
-            elif command == "snort":
-                module = snort
-            elif command == "othello":
-                module = othello
-            elif command == "go":
-                module = go
-            elif command == "gomoku":
-                module = gomoku
-            elif command == "hextictactoe":
-                module = hextictactoe
-            elif command == "hex":
-                module = hex
-            elif command == "grort":
-                module = grort
-            else:
+            module = game_modules.get(command)
+            if module is None:
                 await self.send_help_message(message.channel)
                 return
             game_type = command
@@ -236,12 +217,10 @@ class Handler:
                 continue
             if entry.is_formatted_move(message_content):
                 if entry.is_legal_move(message_content):
-                    print(f"Legal move {message_content}")
                     game = entry
                     replied_message_id = game_id
                     break
                 else:
-                    print(f"Illegal move {message_content}")
                     await message.channel.send(f"{message.author.mention}, that is not a legal move. {entry.get_move_format_instructions()}")
                     return
         if not game: # no game found

@@ -1,6 +1,5 @@
 from enum import Enum
 from elo_manager import elo_manager
-from emojis import emojis
 
 class Outcome(Enum):
     Tie = 0
@@ -61,16 +60,32 @@ class Game():
         raise NotImplementedError("get_move_format_instructions method must be implemented by subclass")
 
     def who_gains_elo(self):
-        raise NotImplementedError("who_gains_elo method must be implemented by subclass")
+        if self.outcome == Outcome.Player1Win:
+            return self.player1
+        elif self.outcome == Outcome.Player2Win:
+            return self.player2
+        else:
+            return None
 
     def who_loses_elo(self):
-        raise NotImplementedError("who_loses_elo method must be implemented by subclass")
+        if self.outcome == Outcome.Player1Win:
+            return self.player2
+        elif self.outcome == Outcome.Player2Win:
+            return self.player1
+        else:
+            return None
 
     def get_player_to_move(self):
         return self.player1 if self.turn == 1 else self.player2
 
     def get_piece_to_move(self):
         return self.player1_piece if self.turn == 1 else self.player2_piece
+
+    def get_player_not_to_move(self):
+        return self.player1 if self.turn == 2 else self.player2
+
+    def get_piece_not_to_move(self):
+        return self.player1_piece if self.turn == 2 else self.player2_piece
 
     def forfeit(self, player):
         if self.outcome is not None:

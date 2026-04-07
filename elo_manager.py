@@ -11,15 +11,17 @@ class EloManager:
         self.elos = {}
         self._load_elos()
 
-    def get_leaderboard(self):
+    def get_leaderboard(self, game):
         # Generate a leaderboard string for the top 10 players across all game types.
         player_to_summed_elo = {}
-        for game_type in self.elos:
-            for key in self.elos[game_type]:
+        games_to_consider = [game] if game else self.elos.keys()
+        for game_type in games_to_consider:
+            keys = self.elos.get(game_type, {}).keys()
+            for key in keys:
                 player_to_summed_elo[key] = player_to_summed_elo.get(key, 0) + self.elos[game_type][key]
         # Sort players by summed ELO and get top 10
         elos = sorted(player_to_summed_elo.items(), key=lambda x: x[1], reverse=True)
-        ret = "ELO Leaderboard:\n"
+        ret = "ELO Leaderboard " + (f"for {game}" if game else "across all games") + ":\n"
         for i in range(min(10, len(elos))):
             user_id = int(elos[i][0])
             elo = elos[i][1]
