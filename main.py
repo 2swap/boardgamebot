@@ -8,6 +8,7 @@ import games.hextictactoe as hextictactoe
 import games.hex as hex
 import games.grort as grort
 import games.mancala as mancala
+import games.capturego as capturego
 
 import os
 from elo_manager import elo_manager
@@ -35,6 +36,7 @@ game_classes = {
     "hextictactoe": hextictactoe.HexTicTacToeGame,
     "grort": grort.GrortGame,
     "mancala": mancala.MancalaGame,
+    "capturego": capturego.CaptureGoGame,
 }
 game_modules = {
     "connect4": connect4,
@@ -45,6 +47,7 @@ game_modules = {
     "hextictactoe": hextictactoe,
     "grort": grort,
     "mancala": mancala,
+    "capturego": capturego,
 }
 
 class Handler:
@@ -113,9 +116,8 @@ class Handler:
 
     async def send_help_message(self, channel):
         available_games = []
-        for filename in os.listdir("games"):
-            if filename.endswith(".py"):
-                available_games.append(filename[:-3])
+        for game_name in game_classes:
+            available_games.append(game_name)
         await channel.send(f"Start a game with \"!gamename\". For example, \"!connect4\" opens an invitation to a Connect 4 game.\nAvailable games: {', '.join(available_games)}\nUse \"!help gamename\" for the rules of the game.")
 
     async def send_game_rules(self, channel, game_name):
