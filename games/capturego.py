@@ -8,6 +8,7 @@ from emojis import emoji_numbers, emoji_letters
 from coordinate_parser import parse_single_coordinate
 
 class CaptureGoGame(Game):
+    game_type = "Capture Go"
     rules = (
         "Capture Go: Players alternate placing pieces on the board. "
         "If a move captures any opponent stones (removes them by surrounding them so they have no liberties), "
@@ -18,7 +19,6 @@ class CaptureGoGame(Game):
     def __init__(self, player1, player2, settings):
         Game.__init__(self, player1, player2, settings)
         self.last_move = None
-        self.game_type = "Capture Go"
         self.add_reactions = False
         self.gameboard = [[self.empty_piece for w in range(self.settings["width"])] for h in range(self.settings["height"])]
 

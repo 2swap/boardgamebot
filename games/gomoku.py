@@ -8,6 +8,7 @@ from emojis import emoji_numbers, emoji_letters
 from coordinate_parser import parse_single_coordinate
 
 class GomokuGame(Game):
+    game_type = "Gomoku"
     rules = (
         "Gomoku: Players alternate placing pieces on the board. "
         "The first player to form an unbroken line of the required length "
@@ -19,7 +20,6 @@ class GomokuGame(Game):
     def __init__(self, player1, player2, settings):
         Game.__init__(self, player1, player2, settings)
         self.last_move = None
-        self.game_type = "Gomoku"
         self.add_reactions = False
         self.gameboard = [[self.empty_piece for w in range(self.settings["width"])] for h in range(self.settings["height"])]
 
@@ -122,7 +122,7 @@ class GomokuGame(Game):
 correction_message = "Invalid command format. Please optionally add -w [width], -h [height], and -k [connectivity]."
 
 def parse_settings(args):
-    mnk = [15, 15, 5]
+    mnk = [13, 13, 5]
 
     parsed_settings = {}
 

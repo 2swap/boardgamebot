@@ -8,6 +8,7 @@ from emojis import emoji_numbers, emoji_letters
 from coordinate_parser import parse_single_coordinate
 
 class GrortGame(Game):
+    game_type = "Grort"
     rules = (
         "Grort: Players alternate placing pieces on the board. "
         "A piece may not be placed orthogonally adjacent to any opponent piece. "
@@ -20,7 +21,6 @@ class GrortGame(Game):
     def __init__(self, player1, player2, settings):
         Game.__init__(self, player1, player2, settings)
         self.last_move = None
-        self.game_type = "Grort"
         self.add_reactions = False
         self.swap_enabled = True
         self.gameboard = [[self.empty_piece for w in range(self.settings["width"])] for h in range(self.settings["height"])]

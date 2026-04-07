@@ -7,6 +7,7 @@ from game import Game, Outcome
 from emojis import emoji_numbers, emoji_letters
 
 class MancalaGame(Game):
+    game_type = "Mancala (American Kalah)"
     rules = (
         "Mancala (American Kalah) is a two-player strategy game where the objective is to collect more stones in your store than your opponent. The board consists of two rows of pits, each containing a certain number of stones, and two stores (one for each player). Players take turns selecting a pit on their side and distributing its stones counterclockwise into subsequent pits and their own store, but not the opponent's store. If the last stone lands in an empty pit on the player's side which is opposite a non-empty pit on the opponent's side, they capture that stone and any stones in the opposite pit. If the last stone lands in the player's store, they get an extra turn. The game ends when all pits on one side are empty, at which point the remaining stones on the other side are collected into that player's store. The player with the most stones in their store wins."
     )
@@ -14,7 +15,6 @@ class MancalaGame(Game):
     def __init__(self, player1, player2, settings):
         Game.__init__(self, player1, player2, settings)
         self.last_move = None
-        self.game_type = "Mancala (American Kalah)"
         self.add_reactions = False
         # settings: pits per side and stones per pit
         self.pits = self.settings.get("pits", 6)

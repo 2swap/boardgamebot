@@ -156,8 +156,10 @@ class Handler:
             else:
                 await self.send_help_message(message.channel)
         elif command == "leaderboard":
-            game = arguments[0] if arguments else None
-            await message.channel.send(elo_manager.get_leaderboard(game))
+            game = None
+            if arguments:
+                game = game_classes.get(arguments[0]).game_type
+            await message.channel.send(elo_manager.get_leaderboard(game), allowed_mentions=discord.AllowedMentions(users=False))
         else:
             # post an open challenge anyone can join by reacting
             module = game_modules.get(command)

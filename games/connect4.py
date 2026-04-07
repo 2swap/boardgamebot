@@ -7,6 +7,7 @@ from game import Game, Outcome
 from emojis import emoji_numbers
 
 class Connect4Game(Game):
+    game_type = "Connect 4"
     rules = (
         "Connect 4: Players alternate dropping pieces into a grid. "
         "Pieces fall to the lowest available row in the chosen column. "
@@ -18,7 +19,6 @@ class Connect4Game(Game):
     def __init__(self, player1, player2, settings):
         Game.__init__(self, player1, player2, settings)
         self.last_move = None
-        self.game_type = "Connect 4"
         self.player1_piece = "🔴"
         self.player2_piece = "🟡"
         self.empty_piece = "⚪"

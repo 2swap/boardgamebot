@@ -8,6 +8,7 @@ from emojis import emoji_numbers, emoji_letters
 from coordinate_parser import parse_single_coordinate
 
 class HexTicTacToeGame(Game):
+    game_type = "Hexagonal Tic Tac Toe"
     rules = (
         "Hexagonal Tic-Tac-Toe: Player 1 begins with a piece placed at the center of the board. "
         "Players then alternate placing two pieces per turn. "
@@ -19,7 +20,6 @@ class HexTicTacToeGame(Game):
     def __init__(self, player1, player2, settings):
         Game.__init__(self, player1, player2, settings)
         self.last_move = None
-        self.game_type = "Hexagonal Tic Tac Toe"
         self.add_reactions = False
         self.gameboard = [[self.empty_piece for w in range(self.settings["width"])] for h in range(self.settings["height"])]
         # Place Player 1's first move at the central spot upfront (as per Connect-6 rules)

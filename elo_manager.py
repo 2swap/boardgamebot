@@ -14,9 +14,12 @@ class EloManager:
     def get_leaderboard(self, game):
         # Generate a leaderboard string for the top 10 players across all game types.
         player_to_summed_elo = {}
+        print(game)
         games_to_consider = [game] if game else self.elos.keys()
         for game_type in games_to_consider:
+            print(game_type)
             keys = self.elos.get(game_type, {}).keys()
+            print(keys)
             for key in keys:
                 player_to_summed_elo[key] = player_to_summed_elo.get(key, 0) + self.elos[game_type][key]
         # Sort players by summed ELO and get top 10
